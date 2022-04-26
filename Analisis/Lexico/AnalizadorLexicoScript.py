@@ -130,49 +130,88 @@ class AnalizadorLexico:
             self.estado = "A"
             self.i -= 1
 
+    #Reviso si es una palabra reservada, un identificador, o un nombre de archivo
     def estadoE(self, caracter):
-        if caracter.isalpha():
+        if re.match("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]+",caracter):
             self.buffer += caracter
             self.columna += 1
         else:
             if re.search("RESULTADO|VS|TEMPORADA|JORNADA|GOLES|LOCAL|VISITANTE|TOTAL|TABLA|PARTIDOS|TOP|SUPERIOR|INFERIOR",
                          self.buffer.lower()):
-                self.agregar_token(self.buffer, 'reservada', self.linea, self.columna)
+                self.agregar_token(self.buffer, 'Reservada', self.linea, self.columna)
+                self.estado = "A"
+                self.i -= 1
+                self.buffer = ''
+            elif re.match("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+", self.buffer):
+                self.agregar_token(self.buffer, 'Nombre equipo', self.linea, self.columna)
+                self.estado = "A"
+                self.i -= 1
+                self.buffer = ''
+            elif re.search("[a-zA-Z0-9_-]+", self.buffer):
+                self.agregar_token(self.buffer, 'Nombre archivo', self.linea, self.columna)
                 self.estado = "A"
                 self.i -= 1
                 self.buffer = ''
             else:
-                self.buffer += caracter
+                self.estado = "A"
                 self.agregar_error(self.buffer, self.linea, self.columna)
+                self.i -= 1
                 self.buffer = ''
-                self.columna += 1
 
     def estadoF(self, caracter):
         if caracter == "f":
             self.buffer += caracter
             self.columna += 1
-            self.estado = "A"
-            self.agregar_token(self.buffer, 'Bandera', self.linea, self.columna)
+            self.estado = "G"
+        elif caracter == "n":
+            self.buffer += caracter
+            self.columna += 1
+            self.estado = "H"
+        elif caracter == "j":
+            self.buffer += caracter
+            self.columna += 1
+            self.estado = "I"
         else:
             self.estado = "A"
             self.agregar_error(self.buffer, self.linea, self.columna)
             self.i -= 1
             self.buffer = ''
 
+
     def estadoG(self, caracter):
-        pass
+        self.agregar_token(self.buffer, 'Bandera -f', self.linea, self.columna)
+        self.i -= 1
+        self.estado = "A"
 
     def estadoH(self, caracter):
-        pass
+        self.agregar_token(self.buffer, 'Bandera -n', self.linea, self.columna)
+        self.i -= 1
+        self.estado = "A"
 
     def estadoI(self, caracter):
-        pass
+        if caracter == "i":
+            self.buffer += caracter
+            self.columna += 1
+            self.estado = "J"
+        elif caracter == "f":
+            self.buffer += caracter
+            self.columna += 1
+            self.estado = "K"
+        else:
+            self.estado = "A"
+            self.agregar_error(self.buffer, self.linea, self.columna)
+            self.i -= 1
+            self.buffer = ''
 
     def estadoJ(self, caracter):
-        pass
+        self.agregar_token(self.buffer, 'Bandera -n', self.linea, self.columna)
+        self.i -= 1
+        self.estado = "A"
 
     def estadoK(self, caracter):
-        pass
+        self.agregar_token(self.buffer, 'Bandera -n', self.linea, self.columna)
+        self.i -= 1
+        self.estado = "A"
 
 
     # imprimeTokens
