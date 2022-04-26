@@ -6,8 +6,13 @@ from tkinter import *
 from tkinter import ttk, filedialog
 import os
 
+from Analisis.Lexico.AnalizadorLexicoScript import AnalizadorLexico
+
 
 class Interfaz:
+
+    analizador = AnalizadorLexico()
+    contenido = ""
 
     def crearInterfaz(self):
         root = tk.Tk()
@@ -48,7 +53,8 @@ class Interfaz:
         root.mainloop()
 
     def analizarClick(self):
-       pass
+        pass
+
     def enviarClick(self):
         pass
     def limpiarClick(self):
@@ -61,3 +67,47 @@ class Interfaz:
         pass
     def manualUsuarioClick(self):
         pass
+
+    def cadenaError(self):
+        cadena_temp = ""
+        for error in self.analizador.listaErrores:
+            cadena_temp += "<tr><td>" + str(error.descripcion) + "</td><td>" + str(error.linea) + "</td><td>" + str(
+                error.columna) + "</td></tr>\n"
+        return cadena_temp
+
+    def cadenaTokens(self):
+        cadena_temp = ""
+        for token in self.analizador.listaTokens:
+            cadena_temp += "<tr><td>" + str(token.lexema) + "</td><td>" + str(token.linea) + "</td><td>" + str(
+                token.columna) + "</td></tr>\n"
+        return cadena_temp
+
+    def exportarReporteTokens(self):
+        dir = os.getcwd()
+        archivo = open(dir + "\\Modelos\\ModeloTokens.html", "r")
+        modelo = archivo.read()
+        archivo.close()
+        pagina_resultado = open(dir + "\\Modelos\\tokens.html", "w+")
+        indice = modelo.index("</table>")
+        cadena = self.cadenaTokens()
+        nuevo_contenido = ""
+        nuevo_contenido += modelo[0:indice] + cadena[0] + modelo[indice:len(modelo)]
+        indice2 = nuevo_contenido.rindex("</table>")
+        nuevo_contenido = nuevo_contenido[:indice2] + cadena[1:] + nuevo_contenido[indice2:]
+        pagina_resultado.write(nuevo_contenido)
+        webbrowser.open_new_tab(dir + "\\Modelos\\tokens.html")
+
+    def exportarReporteErrores(self):
+        dir = os.getcwd()
+        archivo = open(dir + "\\Modelos\\ModeloErrores.html", "r")
+        modelo = archivo.read()
+        archivo.close()
+        pagina_resultado = open(dir + "\\Modelos\\errores.html", "w+")
+        indice = modelo.index("</table>")
+        cadena = self.cadenaError()
+        nuevo_contenido = ""
+        nuevo_contenido += modelo[0:indice] + cadena[0] + modelo[indice:len(modelo)]
+        indice2 = nuevo_contenido.rindex("</table>")
+        nuevo_contenido = nuevo_contenido[:indice2] + cadena[1:] + nuevo_contenido[indice2:]
+        pagina_resultado.write(nuevo_contenido)
+        webbrowser.open_new_tab(dir + "\\Modelos\\errores.html")
