@@ -8,11 +8,12 @@ import os
 import pandas as pd
 
 from Analisis.Lexico.AnalizadorLexicoScript import AnalizadorLexico
+from Analisis.Sintactico.AnalizadorSintacticoScript import AnalizadorSintactico
 
 
 class Interfaz:
 
-    analizador = AnalizadorLexico()
+    analizador_lex = AnalizadorLexico()
     contenido = ""
 
     def crearInterfaz(self):
@@ -33,19 +34,19 @@ class Interfaz:
         boton_frame = Frame(root,background='#263D42')
         boton_frame.grid(row=0, column=1)
 
-        self.boton_errores = Button(boton_frame, text="Reporte de errores", command=self.analizarClick, width=20,height=2)
+        self.boton_errores = Button(boton_frame, text="Reporte de errores", command=self.analizarClick, width=20, height=2)
         self.boton_errores.grid(row=0, column=1, pady=10)
 
         self.boton_limpiar = Button(boton_frame, text="Limpiar log de errores", command=self.limpiarClick, width=20, height=2)
         self.boton_limpiar.grid(row=1, column=1, pady=10)
 
-        self.boton_tokens = Button(boton_frame, text="Reporte de tokens", command=self.tokensClick,width=20, height=2)
+        self.boton_tokens = Button(boton_frame, text="Reporte de tokens", command=self.tokensClick, width=20, height=2)
         self.boton_tokens.grid(row=2, column=1, pady=10)
 
         self.boton_limpiarTokens = Button(boton_frame, text="Limpiar log de tokens", command=self.limpiarTokensClick, width=20, height=2)
         self.boton_limpiarTokens.grid(row=3, column=1, pady=10)
 
-        self.boton_manualTecnico = Button(boton_frame, text="Manual de usuario", command=self.manualTecnicoClick, width=20,height=2)
+        self.boton_manualTecnico = Button(boton_frame, text="Manual de usuario", command=self.manualTecnicoClick, width=20, height=2)
         self.boton_manualTecnico.grid(row=4, column=1, pady=10)
 
         self.boton_manualUsuario = Button(boton_frame, text="Manual tecnico", command=self.manualUsuarioClick, width=20, height=2)
@@ -57,7 +58,22 @@ class Interfaz:
         pass
 
     def enviarClick(self):
-        pass
+
+        # analizo sintáctica y lexicamente para ver que todo esté bien
+        # si está bien entonces ejecuto el comando
+        texto_enviar = self.texto_entrada.get('1.0', END)
+        self.analizador_lex.analizar(texto_enviar)
+        # analizo sintacticamente
+        # guardo mis listas de tokens y errores
+        lista_tokens = self.analizador_lex.listaTokens
+        lista_errores = self.analizador_lex.listaErrores
+        analizador_sin = AnalizadorSintactico(self.analizador_lex.listaTokens)
+        analizador_sin.analizar()
+        analizador_sin.imprimirErrores()
+
+
+
+
     def limpiarClick(self):
         pass
     def tokensClick(self):
@@ -71,14 +87,14 @@ class Interfaz:
 
     def cadenaError(self):
         cadena_temp = ""
-        for error in self.analizador.listaErrores:
+        for error in self.analizador_lex.listaErrores:
             cadena_temp += "<tr><td>" + str(error.descripcion) + "</td><td>" + str(error.linea) + "</td><td>" + str(
                 error.columna) + "</td></tr>\n"
         return cadena_temp
 
     def cadenaTokens(self):
         cadena_temp = ""
-        for token in self.analizador.listaTokens:
+        for token in self.analizador_lex.listaTokens:
             cadena_temp += "<tr><td>" + str(token.lexema) + "</td><td>" + str(token.linea) + "</td><td>" + str(
                 token.columna) + "</td></tr>\n"
         return cadena_temp

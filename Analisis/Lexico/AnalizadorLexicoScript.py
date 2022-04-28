@@ -136,19 +136,23 @@ class AnalizadorLexico:
             self.buffer += caracter
             self.columna += 1
         else:
-            if re.search("RESULTADO|VS|TEMPORADA|JORNADA|GOLES|LOCAL|VISITANTE|TOTAL|TABLA|PARTIDOS|TOP|SUPERIOR|INFERIOR",
-                         self.buffer.lower()):
-                self.agregar_token(self.buffer, 'Reservada', self.linea, self.columna)
+            if re.search("RESULTADO|TEMPORADA|JORNADA|GOLES|LOCAL|VISITANTE|TOTAL|TABLA|PARTIDOS|TOP|SUPERIOR|INFERIOR", self.buffer):
+                self.agregar_token(self.buffer, 'reservada_'+self.buffer, self.linea, self.columna)
+                self.estado = "A"
+                self.i -= 1
+                self.buffer = ''
+            elif re.match("VS", self.buffer):
+                self.agregar_token(self.buffer, 'VS' + self.buffer, self.linea, self.columna)
                 self.estado = "A"
                 self.i -= 1
                 self.buffer = ''
             elif re.match("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+", self.buffer):
-                self.agregar_token(self.buffer, 'Nombre equipo', self.linea, self.columna)
+                self.agregar_token(self.buffer, 'Equipo', self.linea, self.columna)
                 self.estado = "A"
                 self.i -= 1
                 self.buffer = ''
             elif re.search("[a-zA-Z0-9_-]+", self.buffer):
-                self.agregar_token(self.buffer, 'Nombre archivo', self.linea, self.columna)
+                self.agregar_token(self.buffer, 'Archivo', self.linea, self.columna)
                 self.estado = "A"
                 self.i -= 1
                 self.buffer = ''
@@ -179,12 +183,12 @@ class AnalizadorLexico:
 
 
     def estadoG(self, caracter):
-        self.agregar_token(self.buffer, 'Bandera -f', self.linea, self.columna)
+        self.agregar_token(self.buffer, 'bandera_-f', self.linea, self.columna)
         self.i -= 1
         self.estado = "A"
 
     def estadoH(self, caracter):
-        self.agregar_token(self.buffer, 'Bandera -n', self.linea, self.columna)
+        self.agregar_token(self.buffer, 'bandera_-n', self.linea, self.columna)
         self.i -= 1
         self.estado = "A"
 
@@ -204,12 +208,12 @@ class AnalizadorLexico:
             self.buffer = ''
 
     def estadoJ(self, caracter):
-        self.agregar_token(self.buffer, 'Bandera -n', self.linea, self.columna)
+        self.agregar_token(self.buffer, 'bandera_-ji', self.linea, self.columna)
         self.i -= 1
         self.estado = "A"
 
     def estadoK(self, caracter):
-        self.agregar_token(self.buffer, 'Bandera -n', self.linea, self.columna)
+        self.agregar_token(self.buffer, 'bandera_-jf', self.linea, self.columna)
         self.i -= 1
         self.estado = "A"
 
