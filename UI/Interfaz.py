@@ -5,6 +5,7 @@ from io import open
 from tkinter import *
 from tkinter import ttk, filedialog
 import os
+import pandas as pd
 
 from Analisis.Lexico.AnalizadorLexicoScript import AnalizadorLexico
 

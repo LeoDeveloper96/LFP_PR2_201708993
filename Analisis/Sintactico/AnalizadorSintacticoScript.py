@@ -1,3 +1,5 @@
+from prettytable import PrettyTable
+
 class AnalizadorSintactico:
 
     def __init__(self, tokens: list) -> None:
@@ -228,7 +230,7 @@ class AnalizadorSintactico:
                     elif token.tipo == "Intervalo":
                         # aqui viene la bandera
                         banderas = self.BANDERAS()
-                        if banderas is None:
+                        if len(banderas) == 0:
                             # ejecuto mi funcionalidad
                             # uso el nombre de archivo por defecto
                             pass
@@ -285,12 +287,12 @@ class AnalizadorSintactico:
         if token.tipo == 'bandera_-f':
             # saco el nombre del archivo
             token = self.observarToken()
-            lista.append(token)
+            lista.append(token.lexema)
             if token is None:
                 self.agregarError("Archivo", "EOF")
                 return
             elif token.tipo == "Archivo":
-                lista.append(token)
+                lista.append(token.lexema)
                 return lista
             else:
                 self.agregarError("Archivo", "EOF")
@@ -307,12 +309,12 @@ class AnalizadorSintactico:
         if token.tipo == 'bandera_-n':
             # saco el nombre del archivo
             token = self.observarToken()
-            lista.append(token)
+            lista.append(token.lexema)
             if token is None:
                 self.agregarError("Archivo", "EOF")
                 return
             elif token.tipo == "Archivo":
-                lista.append(token)
+                lista.append(token.lexema)
                 return lista
             else:
                 self.agregarError("Archivo", "EOF")
@@ -320,7 +322,41 @@ class AnalizadorSintactico:
     def BANDERAS(self):
         # Producción
         # BANDERAS' ::= bandera _-f archivo | bandera _-ji número | bandera _-jf número| épsilon BANDERAS
-        pass
+        # Puede venir epsilon entonces lo observo
+        token = self.observarToken()
+        if token is None:
+            return []
+
+        if token.tipo == 'bandera-_f':
+            # saco la bandera -f
+            bandera = self.sacarToken()
+            # saco el archivo
+            archivo = self.sacarToken()
+            # quiere decir que hubo un error sintáctico si no vino el archivo, -f archivo
+            if archivo is None:
+                return
+
+            return [[bandera,archivo]] + self.BANDERAS()
+
+        elif token.tipo == 'bandera_-ji':
+            # saco la bandera
+            bandera = self.sacarToken()
+            # saco el archivo
+            numero = self.sacarToken()
+            # quiere decir que hubo un error
+            if numero is None:
+                return
+            return [[bandera, numero]] + self.BANDERAS()
+
+        elif token.tipo == 'bandera_-jf':
+            # saco la bandera
+            bandera = self.sacarToken()
+            # saco el archivo
+            numero = self.sacarToken()
+            # quiere decir que hubo un error
+            if numero is None:
+                return
+            return [[bandera, numero]] + self.BANDERAS()
 
     def CONDICIONEQUIPO(self):
         # Producción
@@ -344,7 +380,6 @@ class AnalizadorSintactico:
     def CONDICION(self):
         # Producción
         # CONDICION ::= SUPERIOR | INFERIOR
-
         token = self.sacarToken()
         # Si no viene un token retornamos None para
         # Causar que no se ejecute el comando
@@ -357,3 +392,11 @@ class AnalizadorSintactico:
             return token.lexema
         else:
             self.agregarError("SUPERIOR | INFERIOR, EOF", token.tipo)
+
+    def imprimirErrores(self):
+            '''Imprime una tabla con los errores'''
+            x = PrettyTable()
+            x.field_names = ["Descripcion"]
+            for error_ in self.errores:
+                x.add_row([error_])
+            print(x)
