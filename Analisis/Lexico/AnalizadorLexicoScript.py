@@ -102,7 +102,7 @@ class AnalizadorLexico:
             if caracter == '-':
                 self.buffer += caracter
                 self.estado = "C"
-                self.i -= 1
+                self.columna += 1
             else:
                 self.agregar_error(self.buffer, self.linea, self.columna)
                 self.estado = "A"
@@ -113,7 +113,7 @@ class AnalizadorLexico:
         if caracter.isdigit():
             self.buffer += caracter
             self.estado = "D"
-            self.i = -1
+            self.columna += 1
         else:
             self.agregar_error(self.buffer, self.linea, self.columna)
             self.estado = "A"
@@ -141,8 +141,8 @@ class AnalizadorLexico:
                 self.estado = "A"
                 self.i -= 1
                 self.buffer = ''
-            elif re.match("VS", self.buffer):
-                self.agregar_token(self.buffer, 'VS' + self.buffer, self.linea, self.columna)
+            elif self.buffer == "VS":
+                self.agregar_token(self.buffer, 'VS', self.linea, self.columna)
                 self.estado = "A"
                 self.i -= 1
                 self.buffer = ''
