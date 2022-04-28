@@ -9,10 +9,12 @@ class Archivo:
 
     set_datos = pd.read_csv(dir + "\\Archivos\\LaLigaBot-LFP.csv")
 
+
     def EJECUTAR_RESULTADO(self, equipo1, equipo2, intervalo):
         datos = self.set_datos.loc[(self.set_datos['Temporada'] == intervalo.lexema.replace("\n","")) & (self.set_datos['Equipo1'] == equipo1.lexema.replace("\'","")) & (self.set_datos['Equipo2'] == equipo2.lexema.replace("\'",""))]
-        print(datos)
-        return datos
+        resultado = 'Resultado fue: ' + self.set_datos['Goles1'] + '-' + self.set_datos['Goles1']
+        print(resultado)
+        return resultado
 
     def EJECUTAR_JORNADA(self):
         pass

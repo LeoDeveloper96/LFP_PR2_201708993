@@ -15,23 +15,36 @@ class Interfaz:
 
     analizador_lex = AnalizadorLexico()
     contenido = ""
-
+    def yview(self):
+        pass
     def crearInterfaz(self):
         root = tk.Tk()
         root.geometry("1200x800")
         root.configure(background='#263D42')
+        main_frame = Frame(root)
+        main_frame.pack(fill=BOTH,expand=1)
+        canvas = Canvas(main_frame)
+        canvas.pack(side=LEFT,fill=BOTH,expand=1)
+        scrollbar = tk.Scrollbar(main_frame,orient=VERTICAL,command=canvas.yview)
+        scrollbar.pack(side=RIGHT,fill=Y)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind('<Configure>', lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
+        #crear otro frame dentro del canvas
+        segunda_frame = Frame(canvas)
 
-        self.texto_salida = Text(root, width=100, height=40)
+        canvas.create_window((0,0), window=segunda_frame,anchor="nw")
+
+        self.texto_salida = Text(segunda_frame, width=100, height=40)
         self.texto_salida.grid(row=0, column=0, padx=30, pady=20)
 
-        self.texto_entrada = Text(root, width=100, height=5)
+        self.texto_entrada = Text(segunda_frame, width=100, height=5)
         self.texto_entrada.grid(row=1, column=0, padx=30, pady=5)
 
-        self.boton_enviar = Button(root, text="Enviar", command=self.enviarClick, width=20, height=2)
+        self.boton_enviar = Button(segunda_frame, text="Enviar", command=self.enviarClick, width=20, height=2)
         self.boton_enviar.grid(row=1, column=1, pady=10)
 
         # creo los botones del lado derecho
-        boton_frame = Frame(root,background='#263D42')
+        boton_frame = Frame(segunda_frame)
         boton_frame.grid(row=0, column=1)
 
         self.boton_errores = Button(boton_frame, text="Reporte de errores", command=self.analizarClick, width=20, height=2)
