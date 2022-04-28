@@ -1,6 +1,10 @@
 from prettytable import PrettyTable
+from Archivos.ArchivoScript import Archivo
+
 
 class AnalizadorSintactico:
+
+    archivo = Archivo()
 
     def __init__(self, tokens: list) -> None:
         self.errores = []
@@ -54,9 +58,13 @@ class AnalizadorSintactico:
 
     def RESULTADO(self):
         token = self.sacarToken()
+        equipo1 = None
+        equipo2 = None
+        intervalo = None
         if token.tipo == 'reservada_RESULTADO':
             # Sacar otro token --- se espera nombre del equipo
             token = self.sacarToken()
+            equipo1 = token
             if token is None:
                 self.agregarError("Equipo", "EOF")
                 return
@@ -69,6 +77,7 @@ class AnalizadorSintactico:
                 elif token.tipo == "VS":
                     # Sacar otro token --- se espera Nombre equipo
                     token = self.sacarToken()
+                    equipo2 = token
                     if token is None:
                         self.agregarError("Equipo", "EOF")
                         return
@@ -81,11 +90,12 @@ class AnalizadorSintactico:
                         elif token.tipo == "reservada_TEMPORADA":
                             # Sacar otro token --- se espera Intervalo <YYYY-YYYY>
                             token = self.sacarToken()
+                            intervalo = token
                             if token is None:
                                 self.agregarError("Intervalo", "EOF")
                                 return
                             elif token.tipo == "Intervalo":
-                                # Llamo a mi funcionalidad
+                                self.archivo.EJECUTAR_RESULTADO(equipo1, equipo2, intervalo)
                                 pass
                             else:
                                 self.agregarError("Intervalo", token.tipo)

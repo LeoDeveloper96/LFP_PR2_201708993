@@ -5,7 +5,7 @@ from io import open
 from tkinter import *
 from tkinter import ttk, filedialog
 import os
-import pandas as pd
+
 
 from Analisis.Lexico.AnalizadorLexicoScript import AnalizadorLexico
 from Analisis.Sintactico.AnalizadorSintacticoScript import AnalizadorSintactico
@@ -70,9 +70,9 @@ class Interfaz:
         analizador_sin = AnalizadorSintactico(self.analizador_lex.listaTokens)
         analizador_sin.analizar()
         analizador_sin.imprimirErrores()
-
-
-
+        # "Si no hay errores entonces ejecuto la instrucción
+        if len(analizador_sin.errores) == 0:
+            self.texto_salida.insert('1.0', texto_enviar)
 
     def limpiarClick(self):
         pass
