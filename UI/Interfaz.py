@@ -19,7 +19,7 @@ class Interfaz:
         pass
     def crearInterfaz(self):
         root = tk.Tk()
-        root.geometry("1200x800")
+        root.geometry("1100x500")
         root.configure(background='#263D42')
         main_frame = Frame(root)
         main_frame.pack(fill=BOTH,expand=1)
@@ -34,7 +34,7 @@ class Interfaz:
 
         canvas.create_window((0,0), window=segunda_frame,anchor="nw")
 
-        self.texto_salida = Text(segunda_frame, width=100, height=40)
+        self.texto_salida = Text(segunda_frame, width=100, height=20)
         self.texto_salida.grid(row=0, column=0, padx=30, pady=20)
 
         self.texto_entrada = Text(segunda_frame, width=100, height=5)
