@@ -158,34 +158,42 @@ class AnalizadorSintactico:
 
     def GOLES(self):
         condicion = None
+        intervalo = None
         token = self.sacarToken()
         if token.tipo == 'reservada_GOLES':
             # Sacar otro token --- se espera nombre una condicion para el equipo
             condicion = self.CONDICIONEQUIPO()
             if condicion is None:
                 return
-            # Sacar otro token --- se espera nombre  pr_temporada
+            # Sacar otro token --- se espera nombre  equipo
             token = self.sacarToken()
+            equipo1 = token
             if token is None:
-                self.agregarError("reservada_TEMPORADA", "EOF")
+                self.agregarError("Equipo", "EOF")
                 return
-            elif token.tipo == "reservada_TEMPORADA":
-                # Sacar otro token --- se espera nombre  intervalo
+            elif token.tipo == "Equipo":
+                # Sacar otro token --- se espera nombre  temporada
                 token = self.sacarToken()
                 if token is None:
-                    self.agregarError("Intervalo", "EOF")
+                    self.agregarError("reservada_TEMPORADA", "EOF")
                     return
-                elif token.tipo == "Intervalo":
-                    # aqui viene la bandera
-                    bandera = self.BANDERAT()
-                    if bandera is None:
-                        # ejecuto mi funcionalidad
-                        # uso el nombre de archivo por defecto
-                        pass
+                elif token.tipo == "reservada_TEMPORADA":
+                    # Sacar otro token --- se espera nombre  intervalo
+                    token = self.sacarToken()
+                    intervalo = token.lexema
+                    if token is None:
+                        self.agregarError("Intervalo", "EOF")
+                        return
+                    elif token.tipo == "Intervalo":
+                        # aqui mi funcionalidad
+                        resultado = self.archivo.EJECUTAR_GOLES(condicion, equipo1, intervalo)
+                        self.comando.setResultado(resultado)
                     else:
-                        # ejecuto mi funcionalidad
-                        # uso el nombre del archivo proporcionado
-                        pass
+                        self.agregarError("Intervalo", token.tipo)
+                else:
+                    self.agregarError("reservada_TEMPORADA", "EOF")
+            else:
+                self.agregarError("Equipo", "EOF")
         else:
             self.agregarError("reservada_GOLES", "EOF")
 

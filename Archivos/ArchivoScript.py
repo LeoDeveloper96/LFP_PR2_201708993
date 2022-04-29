@@ -19,8 +19,31 @@ class Archivo:
     def EJECUTAR_JORNADA(self):
         pass
 
-    def EJECUTAR_GOLES(self):
-        pass
+    def EJECUTAR_GOLES(self, condicion, equipo, intervalo):
+        # Local es equipo1 y cuando es visitante sale como equipo2
+        resultado = ''
+        if condicion == 'LOCAL':
+            datos = self.set_datos.loc[(self.set_datos['Temporada'] == intervalo.replace("\n", "")) & (self.set_datos['Equipo1'] == equipo.lexema.replace("\'", ""))]
+            goles = sum(datos['Goles1'].values)
+            resultado = 'El resultado de goles como local del ' + equipo.lexema + ' fue:  ' + str(goles)
+        elif condicion == 'VISITANTE':
+            datos = self.set_datos.loc[(self.set_datos['Temporada'] == intervalo.replace("\n", "")) & (
+                    self.set_datos['Equipo2'] == equipo.lexema.replace("\'", ""))]
+            goles = sum(datos['Goles1'].values)
+            resultado = 'El resultado de goles como visitante del ' + equipo.lexema + ' fue:  ' + str(goles)
+        else:
+            datos1 = self.set_datos.loc[(self.set_datos['Temporada'] == intervalo.replace("\n", "")) & (
+                    self.set_datos['Equipo2'] == equipo.lexema.replace("\'", ""))]
+
+            datos2 = self.set_datos.loc[(self.set_datos['Temporada'] == intervalo.replace("\n", "")) & (self.set_datos['Equipo1'] == equipo.lexema.replace("\'", ""))]
+
+            goles = sum(datos1['Goles1'].values)
+            goles += sum(datos2['Goles1'].values)
+            resultado = 'El resultado de goles totales  del ' + equipo.lexema + ' fue:  ' + str(goles)
+
+        return resultado
+
+
 
     def EJECUTAR_TABLA(self):
         pass
