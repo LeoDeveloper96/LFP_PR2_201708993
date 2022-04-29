@@ -12,7 +12,7 @@ class Archivo:
 
     def EJECUTAR_RESULTADO(self, equipo1, equipo2, intervalo):
         datos = self.set_datos.loc[(self.set_datos['Temporada'] == intervalo.lexema.replace("\n","")) & (self.set_datos['Equipo1'] == equipo1.lexema.replace("\'","")) & (self.set_datos['Equipo2'] == equipo2.lexema.replace("\'",""))]
-        resultado = 'Resultado fue: ' + self.set_datos['Goles1'] + '-' + self.set_datos['Goles1']
+        resultado = 'Resultado fue: ' + str(datos['Goles1'].values[0]) + '-' + str(datos['Goles2'].values[0])
         print(resultado)
         return resultado
 

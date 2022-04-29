@@ -15,23 +15,26 @@ class Interfaz:
 
     analizador_lex = AnalizadorLexico()
     contenido = ""
-    def yview(self):
-        pass
+
     def crearInterfaz(self):
         root = tk.Tk()
         root.geometry("1100x500")
         root.configure(background='#263D42')
         main_frame = Frame(root)
         main_frame.pack(fill=BOTH,expand=1)
+        # creo un canvas
         canvas = Canvas(main_frame)
         canvas.pack(side=LEFT,fill=BOTH,expand=1)
+        # agrego un scrollbar al canvas
         scrollbar = tk.Scrollbar(main_frame,orient=VERTICAL,command=canvas.yview)
         scrollbar.pack(side=RIGHT,fill=Y)
+        #configuro el canvas
         canvas.configure(yscrollcommand=scrollbar.set)
         canvas.bind('<Configure>', lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
         #crear otro frame dentro del canvas
         segunda_frame = Frame(canvas)
 
+        #agregar esa  frame a una nueva ventana
         canvas.create_window((0,0), window=segunda_frame,anchor="nw")
 
         self.texto_salida = Text(segunda_frame, width=100, height=20)
