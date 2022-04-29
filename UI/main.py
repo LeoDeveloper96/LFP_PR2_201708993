@@ -1,8 +1,8 @@
-import UI.Interfaz
-from UI.Interfaz import Interfaz
+import UI.InterfazScript
+from UI.InterfazScript import Interfaz
 
 
-interfaz = Interfaz()
+interfaz = Interfaz
 
 if __name__ == "__main__":
     interfaz.crearInterfaz()

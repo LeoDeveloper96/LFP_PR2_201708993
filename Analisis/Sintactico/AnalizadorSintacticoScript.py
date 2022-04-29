@@ -1,10 +1,14 @@
 from prettytable import PrettyTable
+
+
 from Archivos.ArchivoScript import Archivo
+from UI.Comandos import Comandos
 
 
 class AnalizadorSintactico:
 
     archivo = Archivo()
+    comando = Comandos
 
     def __init__(self, tokens: list) -> None:
         self.errores = []
@@ -28,7 +32,7 @@ class AnalizadorSintactico:
             return None
 
     def analizar(self):
-        self.S()
+      return  self.S()
 
     def S(self):
         self.INICIO()
@@ -95,8 +99,9 @@ class AnalizadorSintactico:
                                 self.agregarError("Intervalo", "EOF")
                                 return
                             elif token.tipo == "Intervalo":
-                                self.archivo.EJECUTAR_RESULTADO(equipo1, equipo2, intervalo)
-                                pass
+                                resultado = self.archivo.EJECUTAR_RESULTADO(equipo1, equipo2, intervalo)
+                                print(resultado)
+                                self.comando.setResultado(resultado)
                             else:
                                 self.agregarError("Intervalo", token.tipo)
                         else:

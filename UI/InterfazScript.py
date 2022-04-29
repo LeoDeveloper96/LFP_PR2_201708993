@@ -10,11 +10,33 @@ import os
 from Analisis.Lexico.AnalizadorLexicoScript import AnalizadorLexico
 from Analisis.Sintactico.AnalizadorSintacticoScript import AnalizadorSintactico
 
+# Manera de pythonica de hacer un singleton
+from Patrones.Singleton import Singleton
+from UI.Comandos import Comandos
 
+@Singleton
 class Interfaz:
 
+    def __init__(self):
+        pass
+    comandos = Comandos
     analizador_lex = AnalizadorLexico()
     contenido = ""
+
+    # manera estilo java de implementar singleton
+    # __instance__ = None
+    #
+    # def __new__(cls):
+    #     if Interfaz.__instance__ is None:
+    #         print("Nueva instancia de UI")
+    #         Interfaz.__instance__ = object.__new__(cls)
+    #     return Interfaz.__instance__
+
+    def getTextoSalida(self):
+        return self.texto_salida
+
+    def setTextoSalida(self, texto):
+        self.texto_salida.insert('1.0', texto)
 
     def crearInterfaz(self):
         root = tk.Tk()
@@ -88,7 +110,8 @@ class Interfaz:
         analizador_sin.imprimirErrores()
         # "Si no hay errores entonces ejecuto la instrucción
         if len(analizador_sin.errores) == 0:
-            self.texto_salida.insert('1.0', texto_enviar)
+            self.texto_salida.insert('1.0', texto_enviar + str(self.comandos.getResultado()))
+
 
     def limpiarClick(self):
         pass
