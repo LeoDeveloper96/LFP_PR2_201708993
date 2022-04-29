@@ -84,10 +84,10 @@ class Interfaz:
         self.boton_limpiarTokens = Button(boton_frame, text="Limpiar log de tokens", command=self.limpiarTokensClick, width=20, height=2)
         self.boton_limpiarTokens.grid(row=3, column=1, pady=10)
 
-        self.boton_manualTecnico = Button(boton_frame, text="Manual de usuario", command=self.manualTecnicoClick, width=20, height=2)
+        self.boton_manualTecnico = Button(boton_frame, text="Manual tecnico", command=self.manualTecnicoClick, width=20, height=2)
         self.boton_manualTecnico.grid(row=4, column=1, pady=10)
 
-        self.boton_manualUsuario = Button(boton_frame, text="Manual tecnico", command=self.manualUsuarioClick, width=20, height=2)
+        self.boton_manualUsuario = Button(boton_frame, text="Manual de usuario", command=self.manualUsuarioClick, width=20, height=2)
         self.boton_manualUsuario.grid(row=5, column=1, pady=10)
 
         root.mainloop()
@@ -115,12 +115,19 @@ class Interfaz:
 
     def limpiarClick(self):
         pass
+
     def tokensClick(self):
         pass
+
     def limpiarTokensClick(self):
         pass
+
     def manualTecnicoClick(self):
-        pass
+        print("Manual tecnico")
+        dir = os.getcwd()
+        webbrowser.open_new_tab(dir + "\\Manuales\\" + "Manual Tecnico.pdf")
+
+
     def manualUsuarioClick(self):
         pass
 
