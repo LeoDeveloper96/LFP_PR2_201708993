@@ -100,7 +100,6 @@ class AnalizadorSintactico:
                                 return
                             elif token.tipo == "Intervalo":
                                 resultado = self.archivo.EJECUTAR_RESULTADO(equipo1, equipo2, intervalo)
-                                print(resultado)
                                 self.comando.setResultado(resultado)
                             else:
                                 self.agregarError("Intervalo", token.tipo)
@@ -279,7 +278,7 @@ class AnalizadorSintactico:
                     return
                 elif token.tipo == "Intervalo":
                     # aqui viene la bandera
-                    bandera = self.BANDERAT()
+                    bandera = self.BANDERATOP()
                     if bandera is None:
                         # ejecuto mi funcionalidad
                         # uso el nombre de archivo por defecto

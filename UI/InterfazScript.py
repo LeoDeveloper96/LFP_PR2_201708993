@@ -93,7 +93,19 @@ class Interfaz:
         root.mainloop()
 
     def analizarClick(self):
-        pass
+        dir = os.getcwd()
+        archivo = open(dir + "\\Modelos\\ModeloErrores.html", "r")
+        modelo = archivo.read()
+        archivo.close()
+        pagina_resultado = open(dir + "\\Modelos\\errores.html", "w+")
+        indice = modelo.index("</table>")
+        cadena = self.cadenaError()
+        nuevo_contenido = ""
+        nuevo_contenido += modelo[0:indice] + cadena[0] + modelo[indice:len(modelo)]
+        indice2 = nuevo_contenido.rindex("</table>")
+        nuevo_contenido = nuevo_contenido[:indice2] + cadena[1:] + nuevo_contenido[indice2:]
+        pagina_resultado.write(nuevo_contenido)
+        webbrowser.open_new_tab(dir + "\\Modelos\\errores.html")
 
     def enviarClick(self):
 
